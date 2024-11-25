@@ -21,21 +21,16 @@ namespace ShubhamBarwad.SharedConfig
                 foreach (var line in lines)
                 {
                     if (string.IsNullOrWhiteSpace(line) || line.StartsWith("#"))
-                    {
                         continue;
-                    }
 
-                    var parts = line.Split(new[] { '=' }, 2);
-
-                    if (parts.Length == 2)
+#if NET6_0_OR_GREATER
+                    var keyValuePair = line.Split('=', 2);
+#else
+                    var keyValuePair = line.Split(new[] { '=' }, 2, StringSplitOptions.None);
+#endif
+                    if (keyValuePair.Length == 2)
                     {
-                        var key = parts[0].Trim();
-                        var value = parts[1].Trim();
-
-                        if (!configValues.ContainsKey(key))
-                        {
-                            configValues[key] = value;
-                        }
+                        configValues[keyValuePair[0].Trim()] = keyValuePair[1].Trim();
                     }
                 }
             }
