@@ -1,18 +1,27 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net472;netstandard2.0;net6.0;net8.0</TargetFrameworks>
+    <Nullable>enable</Nullable> <!-- Default to enabled -->
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <!-- Disable nullable for older frameworks -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net472' or '$(TargetFramework)' == 'netstandard2.0'">
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFrameworks>net472;netstandard2.0;net6.0;net8.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
     <PackageId>EnvX</PackageId>
-    <Version>1.0.0</Version>
+    <Version>1.1.0</Version>
     <Authors>Shubham Barwad</Authors>
     <Company>Shubham Barwad</Company>
-    <Description>EnvX is a simple and efficient .NET library for managing environment variables across multiple projects in a solution. It loads variables from a .env file, centralizing configuration management and making it easy to access environment-specific settings</Description>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression> <!-- Add your license type (e.g., MIT, Apache-2.0) -->
-    <PackageProjectUrl>https://github.com/your-repo-url</PackageProjectUrl> <!-- URL to your project -->
-    <RepositoryUrl>https://github.com/your-repo-url</RepositoryUrl> <!-- URL to your repository -->
-    <PackageTags>your, tags, here</PackageTags> <!-- Optional: Add some tags to help others find your package -->
+    <Description>EnvX is a simple and efficient .NET library for managing environment variables across multiple projects in a solution. It loads variables from a .env file, centralizing configuration management and making it easy to access environment-specific settings.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/ShubhamBarwad/EnvX</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/ShubhamBarwad/EnvX</RepositoryUrl>
+    <PackageTags>dotenv, configuration, environment-variables, dotnet, env-file, solution-configuration</PackageTags>
   </PropertyGroup>
 
 </Project>
