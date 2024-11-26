@@ -10,6 +10,9 @@
 - **Simple API:** Easily access variables using a static `ConfigManager` class.
 - **Automatic Loading:** Automatically loads environment variables during application initialization.
 - **Customizable:** Dynamically handle additional variables without modifying library code.
+- **Cross-Platform Support:** Supports .NET Standard 2.0, .NET 6.0, .NET 8.0, and .NET Framework 4.7.2, ensuring compatibility across different environments.
+- **Flexible Parsing:** Handles string parsing for values with special characters and supports both single and double quotes.
+- **Vulnerability Scanning Support:** Integrated with NuGet vulnerability scanning, ensuring that package dependencies are secure.
 
 ---
 

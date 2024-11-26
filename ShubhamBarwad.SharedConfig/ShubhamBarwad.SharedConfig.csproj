@@ -14,7 +14,7 @@
     <TargetFrameworks>net472;netstandard2.0;net6.0;net8.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <PackageId>EnvX</PackageId>
-    <Version>1.2.0</Version>
+    <Version>1.2.2</Version>
     <Authors>Shubham Barwad</Authors>
     <Company>Shubham Barwad</Company>
     <Description>EnvX is a simple and efficient .NET library for managing environment variables across multiple projects in a solution. It loads variables from a .env file, centralizing configuration management and making it easy to access environment-specific settings.</Description>
