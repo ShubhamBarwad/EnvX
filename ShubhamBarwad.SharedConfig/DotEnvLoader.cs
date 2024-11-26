@@ -1,13 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text.RegularExpressions;
 
 namespace ShubhamBarwad.SharedConfig
 {
+    /// <summary>
+    /// Provides functionality to load and parse environment variables from a `.env` file located in the solution root.
+    /// </summary>
     public static class DotEnvLoader
     {
+        /// <summary>
+        /// Precompiled regex pattern to match key-value pairs in the .env file
+        /// </summary>
+        private static readonly Regex KeyValueRegex = new Regex(
+            @"^\s*(?<key>[A-Za-z_][A-Za-z0-9_]*)\s*=\s*(?<value>.+?)\s*$",
+            RegexOptions.Compiled);
+
+        /// <summary>
+        /// Loads environment variables from a `.env` file in the solution root directory.
+        /// </summary>
+        /// <returns>
+        /// A dictionary containing the key-value pairs of the environment variables.
+        /// </returns>
+        /// <exception cref="FileNotFoundException">
+        /// Thrown if the `.env` file is not found in the solution root.
+        /// </exception>
         public static Dictionary<string, string> LoadEnvVariables()
         {
             var configValues = new Dictionary<string, string>();
@@ -20,18 +35,21 @@ namespace ShubhamBarwad.SharedConfig
 
                 foreach (var line in lines)
                 {
-                    if (string.IsNullOrWhiteSpace(line) || line.StartsWith("#"))
-                        continue;
-
-#if NET6_0_OR_GREATER
-                    var keyValuePair = line.Split('=', 2);
-#else
-                    var keyValuePair = line.Split(new[] { '=' }, 2, StringSplitOptions.None);
-#endif
-                    if (keyValuePair.Length == 2)
+                    if (string.IsNullOrWhiteSpace(line) || line.StartsWith("#") || line.StartsWith("//"))
                     {
-                        configValues[keyValuePair[0].Trim()] = keyValuePair[1].Trim();
+                        continue;
                     }
+                    var match = KeyValueRegex.Match(line);
+                    if (match.Success)
+                    {
+                        var key = match.Groups["key"].Value;
+                        var rawValue = match.Groups["value"].Value;
+
+                        string value = ParseValue(rawValue);
+
+                        configValues[key] = value;
+                    }
+
                 }
             }
             else
@@ -42,6 +60,15 @@ namespace ShubhamBarwad.SharedConfig
             return configValues;
         }
 
+        /// <summary>
+        /// Gets the root directory of the solution by searching for a `.sln` file in parent directories.
+        /// </summary>
+        /// <returns>
+        /// The full path of the solution root directory.
+        /// </returns>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown if the solution root directory is not found.
+        /// </exception>
         private static string GetSolutionRootDirectory()
         {
             var currentDirectory = Directory.GetCurrentDirectory();
@@ -56,6 +83,31 @@ namespace ShubhamBarwad.SharedConfig
             }
 
             throw new InvalidOperationException("Solution root not found.");
+        }
+
+        /// <summary>
+        /// Parses a raw value string from the `.env` file.
+        /// Handles quotes, escape sequences, and other special characters.
+        /// </summary>
+        /// <param name="rawValue">The raw value string from the `.env` file.</param>
+        /// <returns>The parsed and cleaned value string.</returns>
+        private static string ParseValue(string rawValue)
+        {
+            if ((rawValue.StartsWith("\"") && rawValue.EndsWith("\"")) ||
+                (rawValue.StartsWith("'") && rawValue.EndsWith("'")))
+            {
+#if NET6_0_OR_GREATER
+                rawValue = rawValue[1..^1];
+#else
+                rawValue = rawValue.Substring(1, rawValue.Length - 2);
+#endif
+            }
+
+            return rawValue.Replace("\\n", "\n")
+                           .Replace("\\t", "\t")
+                           .Replace("\\r", "\r")
+                           .Replace("\\\"", "\"")
+                           .Replace("\\'", "'");
         }
     }
 }
