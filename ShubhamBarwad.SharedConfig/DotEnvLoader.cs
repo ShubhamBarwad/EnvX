@@ -39,7 +39,6 @@ namespace ShubhamBarwad.SharedConfig
                     {
                         continue;
                     }
-
                     var match = KeyValueRegex.Match(line);
                     if (match.Success)
                     {
